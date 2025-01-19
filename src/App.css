@@ -1,0 +1,61 @@
+
+
+.App {
+  text-align: center;
+  display: flex; /* Enable flexbox on the main app container */
+  flex-direction: column; /* Stack children vertically */
+  min-height: 100vh; /* Ensure the app takes up at least the full viewport height */
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+footer
+{
+  text-align: center;
+  background-color: black;
+  padding: 10px 0; /* Add some padding for better visual spacing */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  flex: 1; /* Allow the header to take up available space, pushing the footer down */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+nav {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+}
+
+nav ul {
+  display: flex; /* Make the <ul> a flex container */
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+nav li {
+  margin-right: 1rem; /* Add some space between list items */
+}
+
+nav li:last-child {
+  margin-right: 0; /* Remove margin from the last item */
+}

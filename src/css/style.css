@@ -1,0 +1,110 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: antiquewhite;
+  text-align: center;
+}
+
+.h1-homepage {
+  color: blue;
+}
+h1 {
+  color: red;
+}
+.about-us-h1 {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 20px 0;
+  color: slateblue;
+}
+
+.active {
+  text-decoration: underline;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.jcc {
+  justify-content: center;
+}
+
+.g1 {
+  gap: 1rem;
+}
+
+nav ul {
+  padding: 0;
+}
+nav ul li {
+  list-style-type: none;
+  margin-right: 15px;
+  display: inline;
+}
+
+li > a {
+  text-decoration: none;
+  color: brown;
+}
+
+li > a:hover {
+  color: blue; /* Highlight color when hovered */
+  text-decoration: underline; /* Underline on hover */
+}
+
+li > a:focus {
+  color: green; /* Color when focused (clicked or tabbed) */
+  text-decoration: underline; /* Underline on focus */
+}
+
+li > a:active {
+  color: red; /* Color when actively clicked */
+  text-decoration: underline; /* Underline when clicked */
+}
+
+.authors {
+  display: flex; /* Arrange children (left and right) side by side */
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Use the full width of the container */
+  height: 50vh; /* Adjust height as needed */
+  padding: 0 20px; /* Add padding to the sides */
+}
+
+/* Left and right sections */
+.left,
+.right {
+  width: 45%; /* Each section takes 45% of the container width */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Left side */
+.left {
+  padding: 20px;
+}
+
+/* Right side */
+.right {
+  padding: 20px;
+}
+.left img,
+.right img,
+.middle {
+  width: 250px;
+  height: auto;
+  align-items: center;
+}
+
+/* Text styling for both sides */
+.left p,
+.right p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
