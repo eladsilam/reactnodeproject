@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "../css/Home.css"
-import {contentData} from "../assets/home_assets/paragraphs";
+import "../css/Home.css";
+import { contentData } from "../assets/home_assets/paragraphs";
+import ItemList from "./ItemList"; // ייבוא רשימת הפריטים
 
 export default function Home() {
   const [visibleContent, setVisibleContent] = useState(null);
@@ -14,13 +15,7 @@ export default function Home() {
       <h1>Welcome to the Home Page!</h1>
       <p className="home-paragraph">
         In today’s rapidly growing urban environments, efficient waste
-        management has become a critical aspect of maintaining a clean and
-        sustainable city. Cities are facing an ever-increasing volume of waste,
-        and traditional trash collection methods are often unable to keep up
-        with the demands. To combat this, cities need to implement smarter, more
-        powerful trash collection systems that utilize modern technologies like
-        smart bins, real-time data monitoring, and optimized routes for
-        collection vehicles.
+        management has become crucial...
       </p>
 
       {contentData.map((item, index) => (
@@ -41,6 +36,9 @@ export default function Home() {
           )}
         </div>
       ))}
+
+      {/* ניהול רשימה */}
+      <ItemList />
     </div>
   );
 }
