@@ -1,61 +1,118 @@
+/* General Styling */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4; /* Light background for contrast */
+}
 
-
+/* Main App Container */
 .App {
   text-align: center;
-  display: flex; /* Enable flexbox on the main app container */
-  flex-direction: column; /* Stack children vertically */
-  min-height: 100vh; /* Ensure the app takes up at least the full viewport height */
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-footer
-{
-  text-align: center;
-  background-color: black;
-  padding: 10px 0; /* Add some padding for better visual spacing */
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  flex: 1; /* Allow the header to take up available space, pushing the footer down */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  min-height: 100vh; /* Full height */
+}
+
+/* Ensure main content grows and pushes footer down */
+main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 20px;
+}
+
+/* Header Section */
+.header {
+  background-color: #282c34;
   color: white;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+/* User Info */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info span {
+  font-weight: bold;
+}
+
+/* Logout Button */
+.logout-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background-color: #cc0000;
+}
+
+/* Navigation Bar */
 nav {
-  background-color: #333;
-  color: #fff;
+  background-color: rgb(130, 173, 90);
+  color: rgb(159, 30, 30);
   padding: 1rem;
 }
 
 nav ul {
-  display: flex; /* Make the <ul> a flex container */
-  list-style-type: none; /* Remove default list styling */
-  padding: 0; /* Remove default padding */
-  margin: 0; /* Remove default margin */
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 nav li {
-  margin-right: 1rem; /* Add some space between list items */
+  margin-right: 1rem;
 }
 
 nav li:last-child {
-  margin-right: 0; /* Remove margin from the last item */
+  margin-right: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(25, 16, 16);
+  font-weight: bold;
+  padding: 10px;
+  transition: background 0.3s;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 5px;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  background-color: rgb(90, 135, 149);
+  padding: 10px 0;
+  margin-top: auto;
+  color: white;
+  font-size: 14px;
 }

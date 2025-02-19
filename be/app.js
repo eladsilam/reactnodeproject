@@ -1,8 +1,21 @@
 const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const db = require("./dbSingleton").getConnection(); // Ensure the DB connection is properly initialized
 
 const app = express();
 const port = 8801;
+
+app.use(express.json()); // Middleware to parse JSON
+app.use(cookieParser());
+app.use(
+  session({
+    secret: "your_secret_key", // Replace with your own secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  })
+);
 
 // Import routes
 const articlesRoutes = require("./articles");
