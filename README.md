@@ -1,5 +1,5 @@
 # Shai Salem And Elad Silam Project
-# React Node Project
+# React Node Project.
 
 This project is a full-stack application that includes both frontend and backend components. The frontend is built with React, and the backend is built with Node.js and Express. The application includes user registration and login functionality with username, email, password, and role (user or admin).
 
