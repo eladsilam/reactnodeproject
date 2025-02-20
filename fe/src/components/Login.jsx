@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "../css/Login.css";
 
 const Login = ({ setUser }) => {
@@ -12,15 +12,12 @@ const Login = ({ setUser }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("/users/login", {
-        email,
-        password,
-      })
+      .post("/users/login", { email, password })
       .then((response) => {
         setUser(response.data.user);
         navigate("/");
       })
-      .catch((error) => {
+      .catch(() => {
         setError("Invalid email or password");
       });
   };
@@ -47,6 +44,9 @@ const Login = ({ setUser }) => {
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <button type="submit">Login</button>
+      <p>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
     </form>
   );
 };

@@ -3,6 +3,127 @@ const express = require("express");
 const router = express.Router();
 const db = require("./dbSingleton").getConnection();
 
+
+// Fetch all articles with author info
+router.get("/all-articles", (req, res) => {
+  db.query(
+    `SELECT articles.id, articles.title, articles.content, articles.author_id, users.username AS author 
+     FROM articles 
+     JOIN users ON articles.author_id = users.id`,
+    (err, results) => {
+      if (err) {
+        console.error("❌ Error fetching articles:", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+
+      console.log("📌 Articles fetched:", results); // ✅ לבדוק בשרת שה-author_id קיים
+
+      res.json({ articles: results });
+    }
+  );
+});
+
+
+// Delete an article (Only the author can delete)
+router.delete("/:id", (req, res) => {
+  const articleId = req.params.id;
+  const userId = req.session.user?.id; // המשתמש המחובר
+
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // בדיקה אם המשתמש כתב את המאמר
+  db.query("SELECT author_id FROM articles WHERE id = ?", [articleId], (err, results) => {
+    if (err) return res.status(500).json({ message: "Server error" });
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+
+    if (results[0].author_id !== userId) {
+      return res.status(403).json({ message: "You can only delete your own articles" });
+    }
+
+    // מחיקת המאמר
+    db.query("DELETE FROM articles WHERE id = ?", [articleId], (err) => {
+      if (err) return res.status(500).json({ message: "Error deleting article" });
+
+      res.json({ message: "Article deleted successfully" });
+    });
+  });
+});
+
+
+// Update an article (Only the author can edit)
+router.put("/:id", (req, res) => {
+  const articleId = req.params.id;
+  const { title, content } = req.body;
+  const userId = req.session.user?.id; // המשתמש המחובר
+
+  if (!userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  // בדיקה שהמשתמש הוא הבעלים של המאמר
+  db.query("SELECT author_id FROM articles WHERE id = ?", [articleId], (err, results) => {
+    if (err) return res.status(500).json({ message: "Server error" });
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+
+    if (results[0].author_id !== userId) {
+      return res.status(403).json({ message: "You can only edit your own articles" });
+    }
+
+    // עדכון המאמר
+    db.query(
+      "UPDATE articles SET title = ?, content = ? WHERE id = ?",
+      [title, content, articleId],
+      (err) => {
+        if (err) return res.status(500).json({ message: "Error updating article" });
+
+        res.json({ message: "Article updated successfully" });
+      }
+    );
+  });
+});
+
+
+// Add a new article
+router.post("/", (req, res) => {
+  const { title, content } = req.body;
+  const user = req.session.user;
+
+  if (!user) {
+    console.log("❌ Unauthorized user tried to add an article.");
+    return res.status(401).json({ message: "Unauthorized - Please log in." });
+  }
+
+  console.log(`📝 Adding new article: Title: ${title}, Content: ${content}, Author ID: ${user.id}`);
+
+  db.query(
+    "INSERT INTO articles (title, content, author_id) VALUES (?, ?, ?)",
+    [title, content, user.id],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Error adding article to database:", err);
+        return res.status(500).json({ message: "Error adding article" });
+      }
+
+      console.log("✅ Article added to database with ID:", result.insertId);
+
+      res.json({
+        message: "Article added successfully",
+        article: { id: result.insertId, title, content, author_id: user.id },
+      });
+    }
+  );
+});
+
+
+
 // Add new article
 router.post("/", (req, res, next) => {
   const { title, content, author_id } = req.body;
@@ -19,6 +140,8 @@ router.post("/", (req, res, next) => {
     });
   });
 });
+
+
 
 // Delete article by ID
 router.delete("/:id", (req, res, next) => {

@@ -49,6 +49,7 @@ router.post("/login", (req, res) => {
     }
 
     const user = rows[0];
+
     bcrypt.compare(password, user.password_hash, (err, isMatch) => {
       if (err) return res.status(500).json({ message: "Server error" });
 
@@ -56,20 +57,42 @@ router.post("/login", (req, res) => {
         return res.status(400).json({ message: "Invalid email or password" });
       }
 
-      req.session.user = { email: user.email }; // Save session
-      res.json({ message: "User logged in successfully", user: req.session.user }); // Return user
+      // ✅ שמירת ה-ID של המשתמש ב-SESSION
+      req.session.user = { id: user.id, email: user.email, role: user.role };
+      console.log("✅ User logged in:", req.session.user); // לבדוק בשרת
+
+      res.json({ 
+        message: "User logged in successfully", 
+        user: req.session.user 
+      });
     });
   });
 });
+
+
+
 // Session
 router.get("/session", (req, res) => {
   if (req.session.user) {
-    res.json({ user: req.session.user });
+    db.query("SELECT role FROM users WHERE email = ?", [req.session.user.email], (err, rows) => {
+      if (err) return res.status(500).json({ message: "Server error" });
+
+      if (rows.length === 0) {
+        return res.status(401).json({ message: "No active session" });
+      }
+
+      // אם role לא נמצא בסשן, נוסיף אותו מה-DB
+      if (!req.session.user.role) {
+        req.session.user.role = rows[0].role;
+      }
+
+      console.log("Session data:", req.session.user); // בדיקה במסוף
+      res.json({ user: req.session.user });
+    });
   } else {
     res.status(401).json({ message: "No active session" });
   }
 });
-
 
 // User logout
 router.post("/logout", (req, res) => {
@@ -79,5 +102,73 @@ router.post("/logout", (req, res) => {
     res.json({ message: "User logged out successfully" });
   });
 });
+
+
+// Fetch all users (Admin only)
+router.get("/all-users", (req, res) => {
+  if (!req.session.user || req.session.user.role !== "admin") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  db.query("SELECT id, username, email, role FROM users", (err, results) => {
+    if (err) {
+      console.error("❌ Error fetching users:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    res.json({ users: results });
+  });
+});
+
+// Delete a user (Admin only)
+router.delete("/:id", (req, res) => {
+  if (!req.session.user || req.session.user.role !== "admin") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const userId = req.params.id;
+
+  db.query("DELETE FROM users WHERE id = ?", [userId], (err, result) => {
+    if (err) {
+      console.error("❌ Error deleting user:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({ message: "User deleted successfully" });
+  });
+});
+
+// Update a user (Admin only)
+router.put("/:id", (req, res) => {
+  if (!req.session.user || req.session.user.role !== "admin") {
+    return res.status(403).json({ message: "Unauthorized" });
+  }
+
+  const userId = req.params.id;
+  const { username, email, role } = req.body;
+
+  db.query(
+    "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?",
+    [username, email, role, userId],
+    (err, result) => {
+      if (err) {
+        console.error("❌ Error updating user:", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      res.json({ message: "User updated successfully" });
+    }
+  );
+});
+
+
 
 module.exports = router;
