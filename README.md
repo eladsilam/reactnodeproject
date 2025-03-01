@@ -2,8 +2,8 @@
 
 # IMPORTANT!!
 ##Login with: 
-##Email - admin@gmail.com
-##Password - Admin123!
+Email - admin@gmail.com
+Password - Admin123!
 
 # React Node Project.
 
